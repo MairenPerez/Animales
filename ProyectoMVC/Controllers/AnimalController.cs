@@ -1,6 +1,7 @@
 ﻿using Animales.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ProyectoMVC.Models;
 using ProyectoMVC.Models.ViewModels;
 
 namespace ProyectoMVC.Controllers
@@ -11,7 +12,6 @@ namespace ProyectoMVC.Controllers
         {
             return View();
         }
-
 
         [HttpGet]
         public IActionResult Details(int id)
@@ -29,21 +29,33 @@ namespace ProyectoMVC.Controllers
             return View(vm);
         }
 
+        [HttpGet]
         public IActionResult AddAnimal()
         {
-            AddAnimalViewModel vm = new AddAnimalViewModel();
-            vm.TiposDeAnimales = GetTiposDeAnimales();
-            return View(vm);
+            AddAnimalViewModel vm = new AddAnimalViewModel
+            {
+                TiposDeAnimales = GetTiposDeAnimales()
+            };
+
+            return View(vm); 
         }
+
+
 
         // POST: Guardar el nuevo animal
         [HttpPost]
-        public ActionResult AddAnimal(AddAnimalViewModel model)
+        public IActionResult AddAnimal(AddAnimalViewModel model)
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index"); // Redirige a la lista de animales.
+                // Simula el guardado del animal en tu base de datos.
+                AnimalDAL dal = new AnimalDAL();
+                dal.AddAnimal(model);
+
+                // Redirige al índice si todo es válido.
+                return RedirectToAction("AddAnimal");
             }
+
 
             // Si el modelo no es válido, vuelve a cargar los tipos de animales.
             model.TiposDeAnimales = GetTiposDeAnimales();
@@ -54,11 +66,11 @@ namespace ProyectoMVC.Controllers
         {
             // Este método debe obtener los tipos de animales desde tu base de datos.
             return new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "1", Text = "Perro" },
-                    new SelectListItem { Value = "2", Text = "Gato" },
-                    new SelectListItem { Value = "3", Text = "Ave" }
-                };
+                            {
+                                new SelectListItem { Value = "1", Text = "Perro" },
+                                new SelectListItem { Value = "2", Text = "Gato" },
+                                new SelectListItem { Value = "3", Text = "Ave" }
+                            };
         }
     }
 }

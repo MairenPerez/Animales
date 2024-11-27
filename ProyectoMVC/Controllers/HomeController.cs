@@ -38,10 +38,12 @@ namespace ProyectoMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add()
+        public IActionResult AddAnimal()
         {
-            return RedirectToAction("Add", "Animal");
+            return RedirectToAction("AddAnimal", "Animal");
         }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

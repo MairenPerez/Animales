@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ProyectoMVC.Models;
+using ProyectoMVC.Models.ViewModels;
 
 namespace Animales.DAL
 {
@@ -28,8 +29,8 @@ namespace Animales.DAL
                     Animal animal = new Animal
                     {
                         IdAnimal = Convert.ToInt32(reader["IdAnimal"]),
-                        NombreAnimal = reader["NombreAnimal"].ToString(),
-                        Raza = reader["Raza"]?.ToString(),
+                        NombreAnimal = reader["NombreAnimal"]?.ToString() ?? string.Empty,
+                        Raza = reader["Raza"]?.ToString() ?? string.Empty,
                         RIdTipoAnimal = Convert.ToInt32(reader["RIdTipoAnimal"]),
                         FechaNacimiento = reader["FechaNacimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["FechaNacimiento"]),
                         TipoAnimal = tipoAnimalDAL.GetById(Convert.ToInt32(reader["RIdTipoAnimal"]))
@@ -41,9 +42,9 @@ namespace Animales.DAL
             return animales;
         }
 
-        public Animal GetById(int id)
+        public Animal? GetById(int id)
         {
-            Animal animal = null;
+            Animal? animal = null;
             TipoAnimalDAL tipoAnimalDAL = new TipoAnimalDAL();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -59,8 +60,8 @@ namespace Animales.DAL
                     animal = new Animal
                     {
                         IdAnimal = Convert.ToInt32(reader["IdAnimal"]),
-                        NombreAnimal = reader["NombreAnimal"].ToString(),
-                        Raza = reader["Raza"]?.ToString(),
+                        NombreAnimal = reader["NombreAnimal"]?.ToString() ?? string.Empty,
+                        Raza = reader["Raza"]?.ToString() ?? string.Empty,
                         RIdTipoAnimal = Convert.ToInt32(reader["RIdTipoAnimal"]),
                         FechaNacimiento = reader["FechaNacimiento"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["FechaNacimiento"]),
                         TipoAnimal = tipoAnimalDAL.GetById(Convert.ToInt32(reader["RIdTipoAnimal"]))
@@ -69,6 +70,22 @@ namespace Animales.DAL
             }
 
             return animal;
+        }
+
+        // Añadir un nuevo animal
+        public void AddAnimal(AddAnimalViewModel model)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sqlQuery = "INSERT INTO Animal (NombreAnimal, Raza, RIdTipoAnimal, FechaNacimiento) VALUES (@NombreAnimal, @Raza, @RIdTipoAnimal, @FechaNacimiento)";
+                SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+                cmd.Parameters.AddWithValue("@NombreAnimal", model.NombreAnimal);
+                cmd.Parameters.AddWithValue("@Raza", model.Raza ?? (object)DBNull.Value);
+                //cmd.Parameters.AddWithValue("@RIdTipoAnimal", model.RIdTipoAnimal);
+                cmd.Parameters.AddWithValue("@FechaNacimiento", model.FechaNacimiento.HasValue ? (object)model.FechaNacimiento.Value : DBNull.Value);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void Insert(Animal animal)
