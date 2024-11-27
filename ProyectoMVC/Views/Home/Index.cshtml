@@ -1,0 +1,27 @@
+﻿@using ProyectoMVC.Models.ViewModels
+@model AnimalViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Lista de Animales</h1>
+<ul>
+    @foreach(var animal in Model.Animales)
+    {
+        <li>
+            <span class="animal-id">ID: @animal.IdAnimal</span> @animal.NombreAnimal
+            <form asp-action="AnimalDetail" asp-controller="Home" method="post" style="display:inline;">
+                <br />
+                <input type="hidden" name="id" value="@animal.IdAnimal"/>
+                <button type="submit">Ver Detalles</button>
+            </form>
+        </li>
+    }
+</ul>
+
+<div class="col">
+    <form asp-action="Insert" asp-controller="Animal" method="get">
+        <button type="submit">Añadir Nuevo Animal</button>
+    </form>
+</div>

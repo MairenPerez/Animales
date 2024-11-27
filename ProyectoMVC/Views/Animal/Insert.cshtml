@@ -1,0 +1,32 @@
+﻿@model ProyectoMVC.Models.ViewModels.AddAnimalViewModel
+
+<h2>Añadir Nuevo Animal</h2>
+
+@using (Html.BeginForm("AddAnimal", "Animal", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.NombreAnimal)
+        @Html.TextBoxFor(m => m.NombreAnimal, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.NombreAnimal, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Raza)
+        @Html.TextBoxFor(m => m.Raza, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Raza, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.TipoAnimalId, "Tipo de Animal")
+        @Html.DropDownListFor(m => m.TipoAnimalId, Model.TiposDeAnimales, "Seleccionar Tipo", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.TipoAnimalId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FechaNacimiento)
+        @Html.TextBoxFor(m => m.FechaNacimiento, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+}
